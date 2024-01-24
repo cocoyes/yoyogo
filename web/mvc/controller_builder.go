@@ -50,7 +50,12 @@ func (builder *ControllerBuilder) SetConfiguration(configuration abstractions.IC
 // add filter to mvc
 func (builder *ControllerBuilder) AddFilter(pattern string, actionFilter IActionFilter) {
 	xlog.GetXLogger("ControllerBuilder").Debug("add mvc filter: %s", pattern)
-	chain := NewActionFilterChain(pattern, actionFilter)
+	path := builder.configuration.GetString("yoyogo.application.server.path")
+	var build strings.Builder
+	build.WriteString("/")
+	build.WriteString(path)
+	build.WriteString(pattern)
+	chain := NewActionFilterChain(build.String(), actionFilter)
 	builder.mvcRouterHandler.ControllerFilters = append(builder.mvcRouterHandler.ControllerFilters, chain)
 }
 
